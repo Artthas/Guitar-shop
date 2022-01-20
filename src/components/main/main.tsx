@@ -9,6 +9,7 @@ import {ChangeEvent, FocusEvent, MouseEvent, useEffect, useState} from 'react';
 import {changeFilterPrice, changeFilterString, changeFilterType, changePage, changeSortDirection, changeSortTitle, loadGuitarsRating} from '../../store/action';
 import {Link, useHistory, useParams} from 'react-router-dom';
 import {fetchCommentsCountAction} from '../../store/api-actions';
+import LoadingScreen from '../loading-screen/loading-screen';
 
 type FiltersParams = {
   filters: string
@@ -91,6 +92,7 @@ function Main(): JSX.Element {
   const [isDisabledString6, setIsDisabledString6] = useState(false);
   const [isDisabledString7, setIsDisabledString7] = useState(false);
   const [isDisabledString12, setIsDisabledString12] = useState(false);
+  const [isPageLoaded, setIsPageLoaded] = useState(true);
 
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
@@ -201,6 +203,7 @@ function Main(): JSX.Element {
 
   const pageClickHandler = (evt: MouseEvent<HTMLElement>) => {
     evt.preventDefault();
+    setIsPageLoaded(false);
     if (evt.currentTarget.textContent === 'Далее') {
       dispatch(changePage(page + 1));
     } else if (evt.currentTarget.textContent === 'Назад') {
@@ -224,6 +227,7 @@ function Main(): JSX.Element {
       history.push(`/page-${page}`);
     }
     setPagedGuitars(tempPagedGuitars);
+    setIsPageLoaded(true);
     dispatch(fetchCommentsCountAction(sortedGuitars));
     const tempGuitarsRating = tempPagedGuitars.map((guitar) => guitar.rating);
     dispatch(loadGuitarsRating(tempGuitarsRating));
@@ -443,7 +447,7 @@ function Main(): JSX.Element {
               </div>
             </div>
 
-            <GuitarList guitars={pagedGuitars} commentsCount={commentsCount} guitarsRating={guitarsRating}/>
+            {isPageLoaded ? <GuitarList guitars={pagedGuitars} commentsCount={commentsCount} guitarsRating={guitarsRating}/> : <LoadingScreen />}
 
             <div className="pagination page-content__pagination">
               <ul className="pagination__list">

@@ -18,7 +18,14 @@ function Header(): JSX.Element {
       if (evt.target.value.length > 1 && evt.target.value !== ' ') {
         return guitar.name.toLowerCase().indexOf(evt.target.value.toLowerCase()) !== -1;
       } else if (evt.target.value.length === 1 && evt.target.value !== ' ') {
-        return evt.target.value.toLowerCase() === guitar.name.toLowerCase()[0];
+        let i = 0;
+        for (const item of guitar.name.toLowerCase()) {
+          if (item === ' ') {
+            break;
+          }
+          i++;
+        }
+        return evt.target.value.toLowerCase() === guitar.name.toLowerCase()[0] || evt.target.value.toLowerCase() === guitar.name.toLowerCase()[i + 1];
       } else {
         return false;
       }
