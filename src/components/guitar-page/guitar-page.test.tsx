@@ -6,7 +6,6 @@ import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import GuitarPage from './guitar-page';
-import userEvent from '@testing-library/user-event';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

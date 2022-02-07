@@ -92,7 +92,7 @@ describe('Async actions', () => {
       .reply(200, []);
 
     const store = mockStore();
-    await store.dispatch(postCurrentGuitarCommentAction(currentGuitarCommentPost, onSuccess))
+    await store.dispatch(postCurrentGuitarCommentAction(currentGuitarCommentPost, onSuccess));
 
     expect(store.getActions()).toEqual([]);
 
