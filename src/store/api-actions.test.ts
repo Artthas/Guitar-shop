@@ -5,8 +5,8 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {APIRoute} from '../const';
 import {State} from '../types/state';
-import {makeFakeCommentsCount, makeFakeCurrentGuitarComment, makeFakeGuitar} from '../utils/mocks';
-import {fetchCommentsCountAction, fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction, fetchGuitarsAction} from './api-actions';
+import {makeFakeCommentsCount, makeFakeCurrentGuitarComment, makeFakeCurrentGuitarCommentPost, makeFakeGuitar} from '../utils/mocks';
+import {fetchCommentsCountAction, fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction, fetchGuitarsAction, postCurrentGuitarCommentAction} from './api-actions';
 import {changeIsDataLoaded, loadCommentsCount, loadCurrentGuitar, loadCurrentGuitarComments, loadGuitars} from './action';
 
 describe('Async actions', () => {
@@ -79,6 +79,31 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       loadCommentsCount(commentsCount),
+    ]);
+  });
+
+  it('should dispatch Load_Current_Guitar_Comments when POST /comments and GET /guitars/:guitarId/comments', async () => {
+    const mockGuitar = makeFakeGuitar(1);
+    const currentGuitarComments = [...new Array(20)].map(() => makeFakeCurrentGuitarComment(1));
+    const currentGuitarCommentPost = makeFakeCurrentGuitarCommentPost(mockGuitar.id);
+    const onSuccess = jest.fn();
+    mockAPI
+      .onPost(`/${APIRoute.Comments}`)
+      .reply(200, []);
+
+    const store = mockStore();
+    await store.dispatch(postCurrentGuitarCommentAction(currentGuitarCommentPost, onSuccess))
+
+    expect(store.getActions()).toEqual([]);
+
+    mockAPI
+      .onGet(`${APIRoute.Guitars}/${mockGuitar.id}/${APIRoute.Comments}`)
+      .reply(200, currentGuitarComments);
+
+    await store.dispatch(fetchCurrentGuitarCommentsAction(String(mockGuitar.id)));
+
+    expect(store.getActions()).toEqual([
+      loadCurrentGuitarComments(currentGuitarComments),
     ]);
   });
 });

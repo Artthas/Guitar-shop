@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import GuitarPage from './guitar-page';
+import userEvent from '@testing-library/user-event';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -33,7 +34,8 @@ describe('Component: GuitarPage', () => {
           <GuitarPage />
         </Router>
       </Provider>);
-    expect(screen.getAllByText('Товар')[0]).toBeInTheDocument();
+    expect(screen.getByText('Характеристики')).toBeInTheDocument();
+    expect(screen.getByText('Описание')).toBeInTheDocument();
     expect(screen.getByText('Отзывы')).toBeInTheDocument();
   });
 });

@@ -1,6 +1,6 @@
 import {datatype, image, name,lorem} from 'faker';
 import {FilterPrice, FilterString, FilterType, Guitar} from '../types/guitar';
-import {Comment} from '../types/comment';
+import {Comment, CommentPost} from '../types/comment';
 
 const sortTitles = [
   'по цене',
@@ -47,6 +47,15 @@ export const makeFakeCurrentGuitarComment = (guitarId: number): Comment => ({
   'createAt': lorem.word(),
   'guitarId': guitarId,
 } as Comment);
+
+export const makeFakeCurrentGuitarCommentPost = (guitarId: number): CommentPost => ({
+  'guitarId': guitarId,
+  'userName': name.title(),
+  'advantage': lorem.text(),
+  'disadvantage': lorem.text(),
+  'comment': lorem.text(),
+  'rating': makeFakeGuitarRating(),
+} as CommentPost);
 
 export const makeFakeGuitarRating = (): number => Math.floor(Math.random() * 5);
 
