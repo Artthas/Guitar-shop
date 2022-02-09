@@ -5,9 +5,9 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {APIRoute} from '../const';
 import {State} from '../types/state';
-import {makeFakeCommentsCount, makeFakeCurrentGuitarComment, makeFakeCurrentGuitarCommentPost, makeFakeGuitar} from '../utils/mocks';
-import {fetchCommentsCountAction, fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction, fetchGuitarsAction, postCurrentGuitarCommentAction} from './api-actions';
-import {changeIsDataLoaded, loadCommentsCount, loadCurrentGuitar, loadCurrentGuitarComments, loadGuitars} from './action';
+import {makeFakeCurrentGuitarComment, makeFakeCurrentGuitarCommentPost, makeFakeGuitar} from '../utils/mocks';
+import {fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction, fetchGuitarsAction, postCurrentGuitarCommentAction} from './api-actions';
+import {changeIsDataLoaded, loadCurrentGuitar, loadCurrentGuitarComments, loadGuitars} from './action';
 
 describe('Async actions', () => {
   const fakeChangeIsDataLoaded = jest.fn();
@@ -24,7 +24,7 @@ describe('Async actions', () => {
   it('should dispatch Load_Guitars when GET /guitars', async () => {
     const mockGuitars = [...new Array(20)].map((_, idx) => makeFakeGuitar(idx + 1));
     mockAPI
-      .onGet(APIRoute.Guitars)
+      .onGet('/guitars?_embed=comments')
       .reply(200, mockGuitars);
 
     const store = mockStore();
@@ -62,23 +62,6 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       loadCurrentGuitarComments(currentGuitarComments),
-    ]);
-  });
-
-  it('should dispatch Load_Comments_Count when GET /guitars/:guitarId/comments', async () => {
-    const mockGuitars = [...new Array(20)].map((_, idx) => makeFakeGuitar(idx + 1));
-    const commentsCount = [...new Array(20)].map(() => makeFakeCommentsCount());
-    for (let i = 1; i <= mockGuitars.length; i++) {
-      const currentGuitarComments = [...new Array(commentsCount[i - 1])].map(() => makeFakeCurrentGuitarComment(i));
-      mockAPI
-        .onGet(`${APIRoute.Guitars}/${i}/${APIRoute.Comments}`)
-        .reply(200, currentGuitarComments);
-    }
-    const store = mockStore();
-    await store.dispatch(fetchCommentsCountAction(mockGuitars));
-
-    expect(store.getActions()).toEqual([
-      loadCommentsCount(commentsCount),
     ]);
   });
 

@@ -12,7 +12,6 @@ export type GuitarsData = {
 
 export type GuitarsOtherData = {
   currentGuitarComments: Comments,
-  commentsCount: number[],
   sortTitle: string,
   sortDirection: string,
   filterPrice: FilterPrice,

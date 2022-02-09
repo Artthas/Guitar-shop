@@ -35,6 +35,7 @@ export const makeFakeGuitar = (id: number): Guitar => ({
   'stringCount': datatype.number(),
   'rating': makeFakeGuitarRating(),
   'price': datatype.number(),
+  'comments': [...new Array(20)].map(() => makeFakeCurrentGuitarComment(id)),
 } as Guitar);
 
 export const makeFakeCurrentGuitarComment = (guitarId: number): Comment => ({

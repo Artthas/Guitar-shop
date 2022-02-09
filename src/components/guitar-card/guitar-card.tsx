@@ -3,11 +3,10 @@ import {Link, useHistory} from 'react-router-dom';
 
 type GuitarCardProps = {
   guitar: Guitar,
-  commentCount: number,
   guitarRating: number,
 }
 
-function GuitarCard({guitar, commentCount, guitarRating}: GuitarCardProps): JSX.Element {
+function GuitarCard({guitar, guitarRating}: GuitarCardProps): JSX.Element {
   const history = useHistory();
 
   return (
@@ -36,7 +35,7 @@ function GuitarCard({guitar, commentCount, guitarRating}: GuitarCardProps): JSX.
               );
             }
           })}
-          <span className="rate__count">{commentCount}</span>
+          <span className="rate__count">{guitar.comments.length}</span>
           <span className="rate__message"></span>
         </div>
         <p className="product-card__title">{guitar.name}</p>

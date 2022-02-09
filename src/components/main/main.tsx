@@ -4,11 +4,10 @@ import GuitarList from '../guitar-list/guitar-list';
 import {useDispatch, useSelector} from 'react-redux';
 import {getGuitars, getPage} from '../../store/guitars-data/selectors';
 import {getGuitarsRating} from '../../store/guitars-data/selectors';
-import {getCommentsCount, getFilterPrice, getFilterString, getFilterType, getSortDirection, getSortTitle} from '../../store/guitars-other-data/selectors';
+import {getFilterPrice, getFilterString, getFilterType, getSortDirection, getSortTitle} from '../../store/guitars-other-data/selectors';
 import {ChangeEvent, FocusEvent, MouseEvent, useEffect, useState} from 'react';
 import {changeFilterPrice, changeFilterString, changeFilterType, changePage, changeSortDirection, changeSortTitle, loadGuitarsRating} from '../../store/action';
 import {Link, useHistory, useParams} from 'react-router-dom';
-import {fetchCommentsCountAction} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
 
 type FiltersParams = {
@@ -17,7 +16,6 @@ type FiltersParams = {
 
 function Main(): JSX.Element {
   const guitars = useSelector(getGuitars);
-  const commentsCount = useSelector(getCommentsCount);
   const guitarsRating = useSelector(getGuitarsRating);
   const page = useSelector(getPage);
   const sortTitle = useSelector(getSortTitle);
@@ -228,7 +226,6 @@ function Main(): JSX.Element {
     }
     setPagedGuitars(tempPagedGuitars);
     setIsPageLoaded(true);
-    dispatch(fetchCommentsCountAction(sortedGuitars));
     const tempGuitarsRating = tempPagedGuitars.map((guitar) => guitar.rating);
     dispatch(loadGuitarsRating(tempGuitarsRating));
   }, [sortedGuitars, page, filterPrice, filterType, filterString, history, dispatch]);
@@ -447,7 +444,7 @@ function Main(): JSX.Element {
               </div>
             </div>
 
-            {isPageLoaded ? <GuitarList guitars={pagedGuitars} commentsCount={commentsCount} guitarsRating={guitarsRating}/> : <LoadingScreen />}
+            {isPageLoaded ? <GuitarList guitars={pagedGuitars} guitarsRating={guitarsRating}/> : <LoadingScreen />}
 
             <div className="pagination page-content__pagination">
               <ul className="pagination__list">

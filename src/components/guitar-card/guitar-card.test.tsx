@@ -3,11 +3,10 @@ import {render, screen} from '@testing-library/react';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import {Route, Router, Switch} from 'react-router-dom';
-import {makeFakeCommentsCount, makeFakeFilterPrice, makeFakeFilterString, makeFakeFilterType, makeFakeGuitar, makeFakeGuitarRating, makeFakePage} from '../../utils/mocks';
+import {makeFakeFilterPrice, makeFakeFilterString, makeFakeFilterType, makeFakeGuitar, makeFakeGuitarRating, makeFakePage} from '../../utils/mocks';
 import GuitarCard from './guitar-card';
 import thunk from 'redux-thunk';
 import userEvent from '@testing-library/user-event';
-import Main from '../main/main';
 import {AppRoute} from '../../const';
 
 const middlewares = [thunk];
@@ -15,7 +14,6 @@ const mockStore = configureMockStore(middlewares);
 const history = createMemoryHistory();
 const guitars = [...new Array(20)].map((_, idx) => makeFakeGuitar(idx + 1));
 const currentGuitar = makeFakeGuitar(1);
-const commentsCount = [...new Array(20)].map(() => makeFakeCommentsCount());
 const guitarsRating = [...new Array(20)].map(() => makeFakeGuitarRating());
 const page = makeFakePage();
 const filterPrice = makeFakeFilterPrice();
@@ -31,7 +29,6 @@ const store = mockStore({
     isDataLoaded: true,
   },
   GUITARS_OTHER: {
-    commentsCount: commentsCount,
     filterPrice: filterPrice,
     filterType: filterType,
     filterString: filterString,
@@ -46,7 +43,6 @@ describe('Component: GuitarCard', () => {
           <GuitarCard
             guitar={currentGuitar}
             key={currentGuitar.id}
-            commentCount={commentsCount[currentGuitar.id - 1]}
             guitarRating={guitarsRating[currentGuitar.id - 1]}
           />);
         </Router>
@@ -65,17 +61,18 @@ describe('Component: GuitarCard', () => {
               <h1>Mock Guitar Page</h1>
             </Route>
             <Route>
-              <Main />
+              <GuitarCard
+                guitar={currentGuitar}
+                key={currentGuitar.id}
+                guitarRating={guitarsRating[currentGuitar.id - 1]}
+              />);
             </Route>
           </Switch>
         </Router>
       </Provider>,
     );
     expect(screen.queryByText('Mock Guitar Page')).not.toBeInTheDocument();
-    const guitarCards = screen.getAllByTestId('product-card');
-    for (const card of guitarCards) {
-      userEvent.click(card);
-      expect(screen.getByText('Mock Guitar Page')).toBeInTheDocument();
-    }
+    userEvent.click(screen.getByTestId('product-card'));
+    expect(screen.getByText('Mock Guitar Page')).toBeInTheDocument();
   });
 });

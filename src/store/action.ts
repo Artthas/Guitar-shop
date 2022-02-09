@@ -74,13 +74,6 @@ export const loadCurrentGuitarComments = createAction(
   }),
 );
 
-export const loadCommentsCount = createAction(
-  ActionType.LoadCommentsCount,
-  (commentsCount: number[]) => ({
-    payload: commentsCount,
-  }),
-);
-
 export const redirectToRoute = createAction(
   ActionType.RedirectToRoute,
   (url: AppRoute) => ({

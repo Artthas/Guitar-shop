@@ -36,7 +36,6 @@ describe('Component: GuitarList', () => {
         <Router history={history}>
           <GuitarList
             guitars={guitars}
-            commentsCount={commentsCount}
             guitarsRating={guitarsRating}
           />
         </Router>

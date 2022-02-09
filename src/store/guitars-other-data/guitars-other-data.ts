@@ -1,9 +1,8 @@
 import {GuitarsOtherData} from '../../types/state';
 import {createReducer} from '@reduxjs/toolkit';
-import {changeFilterPrice, changeFilterString, changeFilterType, changeSortDirection, changeSortTitle, loadCommentsCount, loadCurrentGuitarComments} from '../action';
+import {changeFilterPrice, changeFilterString, changeFilterType, changeSortDirection, changeSortTitle, loadCurrentGuitarComments} from '../action';
 
 const initialState: GuitarsOtherData = {
-  commentsCount: [],
   currentGuitarComments: [],
   sortTitle: '',
   sortDirection: '',
@@ -26,9 +25,6 @@ const initialState: GuitarsOtherData = {
 
 const guitarsOtherData = createReducer(initialState, (builder) => {
   builder
-    .addCase(loadCommentsCount, (state, action) => {
-      state.commentsCount = action.payload;
-    })
     .addCase(changeSortTitle, (state, action) => {
       state.sortTitle = action.payload;
     })
