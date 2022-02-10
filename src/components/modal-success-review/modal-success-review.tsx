@@ -6,7 +6,7 @@ type ModalSuccessReviewParams = {
 
 function ModalSuccessReview({isActive, onCloseSuccessReviewClick, onSuccessReviewOverlayClick}: ModalSuccessReviewParams): JSX.Element {
   return (
-    <div className={`modal${isActive}`}>
+    <div className={`modal${isActive} modal--success`}>
       <div className="modal__wrapper">
         <div className="modal__overlay" data-close-modal onClick={onSuccessReviewOverlayClick}></div>
         <div className="modal__content">

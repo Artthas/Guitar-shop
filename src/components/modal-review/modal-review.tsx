@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
+import {ChangeEvent, FormEvent, useEffect, useRef, useState} from 'react';
 import {postCurrentGuitarCommentAction} from '../../store/api-actions';
 import {CommentPost} from '../../types/comment';
 import {Guitar} from '../../types/guitar';
@@ -20,11 +20,39 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
   const [review, setReview] = useState({
     'guitarId': currentGuitarId,
     'userName': '',
-    'advantage': '-',
-    'disadvantage': '-',
-    'comment': '-',
+    'advantage': '',
+    'disadvantage': '',
+    'comment': '',
     'rating': 0,
   });
+
+  const [rateMessage, setRateMessage] = useState('');
+  const [nameMessage, setNameMessage] = useState('');
+  const [advantagesMessage, setAdvantagesMessage] = useState('');
+  const [disadvantagesMessage, setDisadvantagesMessage] = useState('');
+  const [commentMessage, setCommentMessage] = useState('');
+
+  const nameRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    nameRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (isActive !== '') {
+      document.querySelector('.form-search__input')?.setAttribute('tabindex', '-1');
+    } else if (isActive === '') {
+      document.querySelector('.form-search__input')?.removeAttribute('tabindex');
+    }
+  }, [isActive]);
+
+  const onSubmitButtonClick = () => {
+    setRateMessage(review.rating === 0 ? 'Поставьте оценку' : '');
+    setNameMessage(review.userName === '' ? 'Заполните поле' : '');
+    setAdvantagesMessage(review.advantage === '' ? 'Заполните поле' : '');
+    setDisadvantagesMessage(review.disadvantage === '' ? 'Заполните поле' : '');
+    setCommentMessage(review.comment === '' ? 'Заполните поле' : '');
+  };
 
   const onSubmit = ({guitarId, userName, advantage, disadvantage, comment, rating}: CommentPost) => {
     dispatch(postCurrentGuitarCommentAction({guitarId, userName, advantage, disadvantage, comment, rating}, onSuccess));
@@ -44,25 +72,40 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
 
   const userNameHandler = (evt: ChangeEvent<HTMLInputElement>) => {
     evt.preventDefault();
+    if (evt.target.value !== '') {
+      setNameMessage('');
+    }
     setReview((prevState) => ({...prevState, 'userName': evt.target.value}));
   };
 
   const ratingHandler = (rating: number) => {
+    if (rating > 0) {
+      setRateMessage('');
+    }
     setReview((prevState) => ({...prevState, 'rating': rating}));
   };
 
   const advantageHandler = (evt: ChangeEvent<HTMLInputElement>) => {
     evt.preventDefault();
+    if (evt.target.value !== '') {
+      setAdvantagesMessage('');
+    }
     setReview((prevState) => ({...prevState, 'advantage': evt.target.value}));
   };
 
   const disadvantageHandler = (evt: ChangeEvent<HTMLInputElement>) => {
     evt.preventDefault();
+    if (evt.target.value !== '') {
+      setDisadvantagesMessage('');
+    }
     setReview((prevState) => ({...prevState, 'disadvantage': evt.target.value}));
   };
 
   const commentHandler = (evt: ChangeEvent<HTMLTextAreaElement>) => {
     evt.preventDefault();
+    if (evt.target.value !== '') {
+      setCommentMessage('');
+    }
     setReview((prevState) => ({...prevState, 'comment': evt.target.value}));
   };
 
@@ -78,7 +121,7 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
               <div className="form-review__name-wrapper">
                 <label className="form-review__label form-review__label--required" htmlFor="user-name">Ваше Имя</label>
                 <input className="form-review__input form-review__input--name" id="user-name" type="text" autoComplete="off" onChange={userNameHandler} required data-testid="user-name"/>
-                {review.userName === '' ? <span className="form-review__warning">Заполните поле</span> : ''}
+                <span className="form-review__warning">{nameMessage}</span>
               </div>
               <div><span className="form-review__label form-review__label--required">Ваша Оценка</span>
                 <div className="rate rate--reverse">
@@ -93,17 +136,20 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
                   <input className="visually-hidden" type="radio" id="star-1" name="rate" value="1" onClick={() => ratingHandler(1)} required/>
                   <label className="rate__label" htmlFor="star-1" title="Ужасно"></label>
                   <span className="rate__count"></span>
-                  {review.rating === 0 ? <span className="rate__message">Поставьте оценку</span> : ''}
+                  <span className="rate__message">{rateMessage}</span>
                 </div>
               </div>
             </div>
             <label className="form-review__label" htmlFor="user-name">Достоинства</label>
-            <input className="form-review__input" id="pros" type="text" autoComplete="off" onChange={advantageHandler} data-testid="advantages"/>
+            <input className="form-review__input" id="pros" type="text" autoComplete="off" onChange={advantageHandler} required data-testid="advantages"/>
+            <span className="form-review__warning">{advantagesMessage}</span>
             <label className="form-review__label" htmlFor="user-name">Недостатки</label>
-            <input className="form-review__input" id="user-name" type="text" autoComplete="off" onChange={disadvantageHandler}/>
+            <input className="form-review__input" id="user-name" type="text" autoComplete="off" onChange={disadvantageHandler} required/>
+            <span className="form-review__warning">{disadvantagesMessage}</span>
             <label className="form-review__label" htmlFor="user-name">Комментарий</label>
-            <textarea className="form-review__input form-review__input--textarea" id="user-name" rows={10} autoComplete="off" onChange={commentHandler}></textarea>
-            <button className="button button--medium-20 form-review__button" type="submit">Отправить отзыв</button>
+            <textarea className="form-review__input form-review__input--textarea" id="user-name" rows={10} autoComplete="off" onChange={commentHandler} required></textarea>
+            <span className="form-review__warning">{commentMessage}</span>
+            <button className="button button--medium-20 form-review__button" type="submit" onClick={onSubmitButtonClick}>Отправить отзыв</button>
           </form>
           <button
             className="modal__close-btn button-cross"

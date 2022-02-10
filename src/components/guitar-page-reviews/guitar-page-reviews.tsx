@@ -60,7 +60,7 @@ function GuitarPageReviews({currentGuitarComments, count, currentGuitarCommentsL
         >
           Показать еще отзывы
         </button>}
-      {currentGuitarComments.length !== 0 ? <a className="button button--up button--red-border button--big reviews__up-button" href="#header">Наверх</a> : ''}
+      <a className="button button--up button--red-border button--big reviews__up-button" href="#header">Наверх</a>
     </section>
   );
 }
