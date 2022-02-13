@@ -225,7 +225,7 @@ function GuitarPage(): JSX.Element {
 
       <Footer />
 
-      <ModalReview isActive={reviewIsActive} onCloseReviewClick={onCloseReviewClick} currentGuitar={currentGuitar} currentGuitarId={Number(guitarId)} onSuccess={onSuccess} onReviewOverlayClick={onReviewOverlayClick} />
+      {reviewIsActive === ' is-active' ? <ModalReview isActive={reviewIsActive} onCloseReviewClick={onCloseReviewClick} currentGuitar={currentGuitar} currentGuitarId={Number(guitarId)} onSuccess={onSuccess} onReviewOverlayClick={onReviewOverlayClick} /> : ''}
 
       <ModalSuccessReview isActive={reviewSuccessIsActive} onCloseSuccessReviewClick={onCloseSuccessReviewClick} onSuccessReviewOverlayClick={onSuccessReviewOverlayClick} />
 

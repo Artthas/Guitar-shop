@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, useEffect, useRef, useState} from 'react';
+import {ChangeEvent, KeyboardEvent, FormEvent, useRef, useState} from 'react';
 import {postCurrentGuitarCommentAction} from '../../store/api-actions';
 import {CommentPost} from '../../types/comment';
 import {Guitar} from '../../types/guitar';
@@ -34,17 +34,12 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
 
   const nameRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    nameRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    if (isActive !== '') {
-      document.querySelector('.form-search__input')?.setAttribute('tabindex', '-1');
-    } else if (isActive === '') {
-      document.querySelector('.form-search__input')?.removeAttribute('tabindex');
+  const onCommentKeyDown = (evt: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (evt.keyCode === 9) {
+      evt.preventDefault();
+      nameRef.current?.focus();
     }
-  }, [isActive]);
+  };
 
   const onSubmitButtonClick = () => {
     setRateMessage(review.rating === 0 ? 'Поставьте оценку' : '');
@@ -120,7 +115,7 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
             <div className="form-review__wrapper">
               <div className="form-review__name-wrapper">
                 <label className="form-review__label form-review__label--required" htmlFor="user-name">Ваше Имя</label>
-                <input className="form-review__input form-review__input--name" id="user-name" type="text" autoComplete="off" onChange={userNameHandler} required data-testid="user-name"/>
+                <input className="form-review__input form-review__input--name" id="user-name" type="text" autoComplete="off" onChange={userNameHandler} required data-testid="user-name" ref={nameRef} autoFocus/>
                 <span className="form-review__warning">{nameMessage}</span>
               </div>
               <div><span className="form-review__label form-review__label--required">Ваша Оценка</span>
@@ -147,7 +142,7 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
             <input className="form-review__input" id="user-name" type="text" autoComplete="off" onChange={disadvantageHandler} required/>
             <span className="form-review__warning">{disadvantagesMessage}</span>
             <label className="form-review__label" htmlFor="user-name">Комментарий</label>
-            <textarea className="form-review__input form-review__input--textarea" id="user-name" rows={10} autoComplete="off" onChange={commentHandler} required></textarea>
+            <textarea className="form-review__input form-review__input--textarea" id="user-name" rows={10} autoComplete="off" onChange={commentHandler} onKeyDown={onCommentKeyDown} required></textarea>
             <span className="form-review__warning">{commentMessage}</span>
             <button className="button button--medium-20 form-review__button" type="submit" onClick={onSubmitButtonClick}>Отправить отзыв</button>
           </form>
