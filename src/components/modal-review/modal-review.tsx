@@ -33,8 +33,24 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
   const [commentMessage, setCommentMessage] = useState('');
 
   const nameRef = useRef<HTMLInputElement | null>(null);
+  const btnSubmitRef = useRef<HTMLButtonElement | null>(null);
+  const btnCloseRef = useRef<HTMLButtonElement | null>(null);
 
   const onCommentKeyDown = (evt: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (evt.keyCode === 9) {
+      evt.preventDefault();
+      btnSubmitRef.current?.focus();
+    }
+  };
+
+  const onBtnSubmitKeyDown = (evt: KeyboardEvent<HTMLButtonElement>) => {
+    if (evt.keyCode === 9) {
+      evt.preventDefault();
+      btnCloseRef.current?.focus();
+    }
+  };
+
+  const onBtnCloseKeyDown = (evt: KeyboardEvent<HTMLButtonElement>) => {
     if (evt.keyCode === 9) {
       evt.preventDefault();
       nameRef.current?.focus();
@@ -144,13 +160,15 @@ function ModalReview({isActive, onCloseReviewClick, currentGuitar, currentGuitar
             <label className="form-review__label" htmlFor="user-name">Комментарий</label>
             <textarea className="form-review__input form-review__input--textarea" id="user-name" rows={10} autoComplete="off" onChange={commentHandler} onKeyDown={onCommentKeyDown} required></textarea>
             <span className="form-review__warning">{commentMessage}</span>
-            <button className="button button--medium-20 form-review__button" type="submit" onClick={onSubmitButtonClick}>Отправить отзыв</button>
+            <button className="button button--medium-20 form-review__button" type="submit" onClick={onSubmitButtonClick} ref={btnSubmitRef} onKeyDown={onBtnSubmitKeyDown}>Отправить отзыв</button>
           </form>
           <button
             className="modal__close-btn button-cross"
             type="button"
             aria-label="Закрыть"
             onClick={onCloseReviewClick}
+            onKeyDown={onBtnCloseKeyDown}
+            ref={btnCloseRef}
           >
             <span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
           </button>
