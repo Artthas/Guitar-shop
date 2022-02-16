@@ -227,7 +227,7 @@ function GuitarPage(): JSX.Element {
 
       {reviewIsActive === ' is-active' ? <ModalReview isActive={reviewIsActive} onCloseReviewClick={onCloseReviewClick} currentGuitar={currentGuitar} currentGuitarId={Number(guitarId)} onSuccess={onSuccess} onReviewOverlayClick={onReviewOverlayClick} /> : ''}
 
-      <ModalSuccessReview isActive={reviewSuccessIsActive} onCloseSuccessReviewClick={onCloseSuccessReviewClick} onSuccessReviewOverlayClick={onSuccessReviewOverlayClick} />
+      {reviewSuccessIsActive === ' is-active' ? <ModalSuccessReview isActive={reviewSuccessIsActive} onCloseSuccessReviewClick={onCloseSuccessReviewClick} onSuccessReviewOverlayClick={onSuccessReviewOverlayClick} /> : ''}
 
     </div>
   );

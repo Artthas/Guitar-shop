@@ -1,3 +1,5 @@
+import {KeyboardEvent, useRef} from 'react';
+
 type ModalSuccessReviewParams = {
   isActive: string,
   onCloseSuccessReviewClick(): void,
@@ -5,6 +7,23 @@ type ModalSuccessReviewParams = {
 };
 
 function ModalSuccessReview({isActive, onCloseSuccessReviewClick, onSuccessReviewOverlayClick}: ModalSuccessReviewParams): JSX.Element {
+  const btnSuccessRef = useRef<HTMLButtonElement | null>(null);
+  const btnCloseRef = useRef<HTMLButtonElement | null>(null);
+
+  const onBtnCloseKeyDown = (evt: KeyboardEvent<HTMLButtonElement>) => {
+    if (evt.keyCode === 9) {
+      evt.preventDefault();
+      btnSuccessRef.current?.focus();
+    }
+  };
+
+  const onBtnSuccessKeyDown = (evt: KeyboardEvent<HTMLButtonElement>) => {
+    if (evt.keyCode === 9) {
+      evt.preventDefault();
+      btnCloseRef.current?.focus();
+    }
+  };
+
   return (
     <div className={`modal${isActive} modal--success`}>
       <div className="modal__wrapper">
@@ -15,9 +34,9 @@ function ModalSuccessReview({isActive, onCloseSuccessReviewClick, onSuccessRevie
           </svg>
           <p className="modal__message">Спасибо за ваш отзыв!</p>
           <div className="modal__button-container modal__button-container--review">
-            <button className="button button--small modal__button modal__button--review" onClick={onCloseSuccessReviewClick}>К покупкам!</button>
+            <button className="button button--small modal__button modal__button--review" onClick={onCloseSuccessReviewClick} onKeyDown={onBtnSuccessKeyDown} ref={btnSuccessRef}>К покупкам!</button>
           </div>
-          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" onClick={onCloseSuccessReviewClick}>
+          <button className="modal__close-btn button-cross" type="button" aria-label="Закрыть" ref={btnCloseRef} onKeyDown={onBtnCloseKeyDown} onClick={onCloseSuccessReviewClick} autoFocus>
             <span className="button-cross__icon"></span><span className="modal__close-btn-interactive-area"></span>
           </button>
         </div>
