@@ -1,4 +1,4 @@
-import {ChangeEvent, FocusEvent, useRef, useState} from 'react';
+import {ChangeEvent, FocusEvent, useRef, useState, KeyboardEvent} from 'react';
 import {useSelector} from 'react-redux';
 import {Link, useHistory} from 'react-router-dom';
 import {getGuitars} from '../../store/guitars-data/selectors';
@@ -45,6 +45,13 @@ function Header(): JSX.Element {
     }
   };
 
+  const onSearchedItemKeyDown = (guitarId: number) => (evt: KeyboardEvent<HTMLElement>) => {
+    if (evt.keyCode === 13) {
+      evt.preventDefault();
+      history.push(`/guitar/${guitarId}`);
+    }
+  };
+
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
@@ -77,7 +84,7 @@ function Header(): JSX.Element {
             <label className="visually-hidden" htmlFor="search">Поиск</label>
           </form>
           <ul className="form-search__select-list hidden" ref={searchListRef} data-testid="search-list">
-            {searchedGuitars.map((guitar) => <li className="form-search__select-item" data-testid="select-item" tabIndex={0} key={guitar.id} onClick={() => {history.push(`/guitar/${guitar.id}`);}}>{guitar.name}</li>)}
+            {searchedGuitars.map((guitar) => <li className="form-search__select-item" data-testid="select-item" tabIndex={0} key={guitar.id} onKeyDown={onSearchedItemKeyDown(guitar.id)} onClick={() => {history.push(`/guitar/${guitar.id}`);}}>{guitar.name}</li>)}
           </ul>
         </div>
         <a className="header__cart-link" href="/" onClick={(evt) => evt.preventDefault()} aria-label="Корзина">
