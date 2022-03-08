@@ -2,7 +2,7 @@ import {ActionType} from '../types/action';
 import {Guitars, Guitar, FilterPrice, FilterType, FilterString} from '../types/guitar';
 import {createAction} from '@reduxjs/toolkit';
 import {Comments} from '../types/comment';
-import { AppRoute } from '../const';
+import {AppRoute} from '../const';
 
 export const loadGuitars = createAction(
   ActionType.LoadGuitars,
@@ -15,6 +15,37 @@ export const loadCurrentGuitar = createAction(
   ActionType.LoadCurrentGuitar,
   (currentGuitar: Guitar) => ({
     payload: currentGuitar,
+  }),
+);
+
+export const addGuitarInCart = createAction(
+  ActionType.AddGuitarInCart,
+  (addingGuitar: Guitar) => ({
+    payload: addingGuitar,
+  }),
+);
+
+export const subGuitarInCart = createAction(
+  ActionType.SubGuitarInCart,
+  (subbingGuitar: Guitar) => ({
+    payload: subbingGuitar,
+  }),
+);
+
+export const deleteGuitarInCart = createAction(
+  ActionType.DeleteGuitarInCart,
+  (deletingGuitar: Guitar) => ({
+    payload: deletingGuitar,
+  }),
+);
+
+export const changeNumberGuitarsInCart = createAction(
+  ActionType.ChangeNumberGuitarsInCart,
+  (changingGuitar: Guitar, changingNumber: number) => ({
+    payload: {
+      changingGuitar: changingGuitar,
+      changingNumber: changingNumber,
+    },
   }),
 );
 
@@ -85,5 +116,12 @@ export const changeIsDataLoaded = createAction(
   ActionType.ChangeIsDataLoaded,
   (isTrue: boolean) => ({
     payload: isTrue,
+  }),
+);
+
+export const loadDiscount = createAction(
+  ActionType.LoadDiscount,
+  (discount: number) => ({
+    payload: discount,
   }),
 );

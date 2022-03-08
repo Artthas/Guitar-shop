@@ -1,7 +1,7 @@
 import {ThunkActionResult} from '../types/action';
-import {loadCurrentGuitar, loadGuitars, loadCurrentGuitarComments, changeIsDataLoaded} from './action';
+import {loadCurrentGuitar, loadGuitars, loadCurrentGuitarComments, changeIsDataLoaded, loadDiscount} from './action';
 import {APIRoute} from '../const';
-import {Guitars, Guitar} from '../types/guitar';
+import {Guitars, Guitar, Coupon} from '../types/guitar';
 import {CommentPost, Comments} from '../types/comment';
 import {toast} from 'react-toastify';
 
@@ -46,6 +46,20 @@ export const postCurrentGuitarCommentAction = ({guitarId, userName, advantage, d
       dispatch(loadCurrentGuitarComments(data));
       onSuccess();
     } catch(error) {
+      toast.info('Сервер недоступен');
+    }
+  };
+
+export const postCouponAction = (coupon: Coupon, onSuccess: postCommentCbType, onError: postCommentCbType): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    try {
+      const {data} = await api.post<number>(`${APIRoute.Coupons}`, coupon);
+      dispatch(loadDiscount(data));
+      // eslint-disable-next-line no-console
+      console.log(data);
+      onSuccess();
+    } catch(error) {
+      onError();
       toast.info('Сервер недоступен');
     }
   };

@@ -11,6 +11,10 @@ import {State} from '../types/state';
 export enum ActionType {
   LoadGuitars = 'guitars/loadGuitars',
   LoadCurrentGuitar = 'guitars/loadCurrentGuitar',
+  AddGuitarInCart = 'guitars/addGuitarInCart',
+  SubGuitarInCart = 'guitars/subGuitarInCart',
+  DeleteGuitarInCart = 'guitars/deleteGuitarInCart',
+  ChangeNumberGuitarsInCart = 'guitars/changeNumberGuitarsInCart',
   LoadGuitarsRating = 'guitars/loadGuitarsRating',
   ChangePage = 'guitars/changePage',
   ChangeSortTitle = 'guitars/changeSortTitle',
@@ -22,6 +26,7 @@ export enum ActionType {
   LoadCurrentGuitarComments = 'comments/loadCurrentGuitarComments',
   LoadCommentsCount = 'comments/loadCommentsCount',
   ChangeIsDataLoaded = 'guitars/changeIsDataLoaded',
+  LoadDiscount = 'guitars/loadDiscount',
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;

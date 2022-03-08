@@ -9,3 +9,4 @@ export const getSortDirection = (state: State): string => state[NameSpace.Guitar
 export const getFilterPrice = (state: State): FilterPrice => state[NameSpace.GuitarsOther].filterPrice;
 export const getFilterType = (state: State): FilterType => state[NameSpace.GuitarsOther].filterType;
 export const getFilterString = (state: State): FilterString => state[NameSpace.GuitarsOther].filterString;
+export const getDiscount = (state: State): number => state[NameSpace.GuitarsOther].discount;

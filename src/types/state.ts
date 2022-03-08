@@ -5,6 +5,7 @@ import {Comments} from './comment';
 export type GuitarsData = {
   guitars: Guitars,
   currentGuitar: Guitar,
+  guitarsInCart: Guitars,
   guitarsRating: number[],
   page: number,
   isDataLoaded: boolean,
@@ -17,6 +18,7 @@ export type GuitarsOtherData = {
   filterPrice: FilterPrice,
   filterType: FilterType,
   filterString: FilterString,
+  discount: number,
 }
 
 export type State = RootState;

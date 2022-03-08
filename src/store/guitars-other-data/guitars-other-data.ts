@@ -1,6 +1,6 @@
 import {GuitarsOtherData} from '../../types/state';
 import {createReducer} from '@reduxjs/toolkit';
-import {changeFilterPrice, changeFilterString, changeFilterType, changeSortDirection, changeSortTitle, loadCurrentGuitarComments} from '../action';
+import {changeFilterPrice, changeFilterString, changeFilterType, changeSortDirection, changeSortTitle, loadCurrentGuitarComments, loadDiscount} from '../action';
 
 const initialState: GuitarsOtherData = {
   currentGuitarComments: [],
@@ -21,6 +21,7 @@ const initialState: GuitarsOtherData = {
     '7-strings': '',
     '12-strings': '',
   },
+  discount: 0,
 };
 
 const guitarsOtherData = createReducer(initialState, (builder) => {
@@ -42,6 +43,9 @@ const guitarsOtherData = createReducer(initialState, (builder) => {
     })
     .addCase(loadCurrentGuitarComments, (state, action) => {
       state.currentGuitarComments = action.payload;
+    })
+    .addCase(loadDiscount, (state, action) => {
+      state.discount = action.payload;
     });
 });
 

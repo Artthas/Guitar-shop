@@ -5,13 +5,16 @@ import {getCurrentGuitar} from '../../store/guitars-data/selectors';
 import {getCurrentGuitarComments} from '../../store/guitars-other-data/selectors';
 import {getGuitarsRating} from '../../store/guitars-data/selectors';
 import {useSelector, useDispatch} from 'react-redux';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction} from '../../store/api-actions';
 import GuitarPageReviews from '../guitar-page-reviews/guitar-page-reviews';
 import {GUITAR_TYPES_RU, GUITAR_TYPES_EN} from '../../const';
 import {MouseEvent} from 'react';
 import ModalReview from '../modal-review/modal-review';
 import ModalSuccessReview from '../modal-success-review/modal-success-review';
+import ModalCart from '../modal-cart/modal-cart';
+import ModalSuccessCart from '../modal-success-cart/modal-success-cart';
+import { addGuitarInCart } from '../../store/action';
 
 type GuitarPageParams = {
   guitarId: string;
@@ -31,6 +34,8 @@ function GuitarPage(): JSX.Element {
   const [showedComments, setShowedComments] = useState(currentGuitarComments);
   const [reviewIsActive, setReviewIsActive] = useState('');
   const [reviewSuccessIsActive, setReviewSuccessIsActive] = useState('');
+  const [cartIsActive, setCartIsActive] = useState('');
+  const [cartSuccessIsActive, setCartSuccessIsActive] = useState('');
 
   useEffect(() => {
     dispatch(fetchCurrentGuitarAction(guitarId));
@@ -137,6 +142,79 @@ function GuitarPage(): JSX.Element {
     document.querySelector('body')?.setAttribute('style', 'overflow: visible');
   };
 
+  const onCloseCartEsc = (evt: KeyboardEvent) => {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      setCartIsActive('');
+      document.removeEventListener('keydown', onCloseCartEsc);
+      document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+    }
+  };
+
+  const onCloseSuccessCartEsc = (evt: KeyboardEvent) => {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      setCartSuccessIsActive('');
+      document.removeEventListener('keydown', onCloseSuccessCartEsc);
+      document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+    }
+  };
+
+  useEffect(() => {
+    if (cartSuccessIsActive === '') {
+      document.removeEventListener('keydown', onCloseSuccessCartEsc);
+    } else {
+      document.addEventListener('keydown', onCloseSuccessCartEsc);
+    }
+  });
+
+  useEffect(() => {
+    if (cartIsActive === '') {
+      document.removeEventListener('keydown', onCloseCartEsc);
+    } else {
+      document.addEventListener('keydown', onCloseCartEsc);
+    }
+  });
+
+  const onBuyClick = () => {
+    setCartIsActive(' is-active');
+    document.querySelector('body')?.setAttribute('style', 'overflow: hidden');
+  };
+
+  const onCloseCartClick = () => {
+    setCartIsActive('');
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+  const onCloseSuccessCartClick = () => {
+    setCartSuccessIsActive('');
+    document.removeEventListener('keydown', onCloseSuccessCartEsc);
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+  const onAddToCartClick = () => {
+    dispatch(addGuitarInCart(currentGuitar));
+    setCartIsActive('');
+    setCartSuccessIsActive(' is-active');
+    document.removeEventListener('keydown', onCloseCartEsc);
+  };
+
+  const onCartOverlayClick = () => {
+    setCartIsActive('');
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+  const onSuccessCartOverlayClick = () => {
+    setCartSuccessIsActive('');
+    document.removeEventListener('keydown', onCloseSuccessCartEsc);
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+
   return (
     <div className="wrapper">
 
@@ -214,7 +292,8 @@ function GuitarPage(): JSX.Element {
             </div>
             <div className="product-container__price-wrapper">
               <p className="product-container__price-info product-container__price-info--title">Цена:</p>
-              <p className="product-container__price-info product-container__price-info--value">{currentGuitar.price} ₽</p><a className="button button--red button--big product-container__button" href="/" onClick={(evt) => evt.preventDefault()}>Добавить в корзину</a>
+              <p className="product-container__price-info product-container__price-info--value">{currentGuitar.price} ₽</p>
+              <button className="button button--red button--big product-container__button" onClick={onBuyClick}>Добавить в корзину</button>
             </div>
           </div>
 
@@ -228,6 +307,10 @@ function GuitarPage(): JSX.Element {
       {reviewIsActive === ' is-active' ? <ModalReview isActive={reviewIsActive} onCloseReviewClick={onCloseReviewClick} currentGuitar={currentGuitar} currentGuitarId={Number(guitarId)} onSuccess={onSuccess} onReviewOverlayClick={onReviewOverlayClick} /> : ''}
 
       {reviewSuccessIsActive === ' is-active' ? <ModalSuccessReview isActive={reviewSuccessIsActive} onCloseSuccessReviewClick={onCloseSuccessReviewClick} onSuccessReviewOverlayClick={onSuccessReviewOverlayClick} /> : ''}
+
+      {cartIsActive === ' is-active' ? <ModalCart isActive={cartIsActive} onCloseCartClick={onCloseCartClick} addingGuitar={currentGuitar} onAddToCartClick={onAddToCartClick} onCartOverlayClick={onCartOverlayClick} /> : ''}
+
+      {cartSuccessIsActive === ' is-active' ? <ModalSuccessCart isActive={cartSuccessIsActive} onCloseSuccessCartClick={onCloseSuccessCartClick} onSuccessCartOverlayClick={onSuccessCartOverlayClick} /> : ''}
 
     </div>
   );

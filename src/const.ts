@@ -3,11 +3,13 @@ export enum AppRoute {
   Catalog = '/page-:pageNumber',
   FilteredCatalog = '/page-:pageNumber/:filters',
   GuitarPage = '/guitar/:guitarId',
+  Cart = '/cart',
 }
 
 export enum APIRoute {
   Guitars = '/guitars',
   Comments = '/comments',
+  Coupons = '/coupons',
 }
 
 export const MONTHS = [

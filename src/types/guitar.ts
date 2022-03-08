@@ -31,4 +31,8 @@ export type FilterString = {
   '12-strings': string,
 }
 
+export type Coupon = {
+  'coupon': string,
+}
+
 export type Guitars = Guitar[];

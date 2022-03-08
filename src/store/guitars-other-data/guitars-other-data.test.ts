@@ -31,6 +31,7 @@ describe('Reducer: guitarsOtherData', () => {
           '7-strings': '',
           '12-strings': '',
         },
+        discount: 0,
       });
   });
 
@@ -54,6 +55,7 @@ describe('Reducer: guitarsOtherData', () => {
         '7-strings': '',
         '12-strings': '',
       },
+      discount: 0,
     };
     expect(guitarsOtherData(state, changeSortTitle(sortTitle)))
       .toEqual({
@@ -75,6 +77,7 @@ describe('Reducer: guitarsOtherData', () => {
           '7-strings': '',
           '12-strings': '',
         },
+        discount: 0,
       });
   });
 
@@ -98,6 +101,7 @@ describe('Reducer: guitarsOtherData', () => {
         '7-strings': '',
         '12-strings': '',
       },
+      discount: 0,
     };
     expect(guitarsOtherData(state, changeSortDirection(sortDirection)))
       .toEqual({
@@ -119,6 +123,7 @@ describe('Reducer: guitarsOtherData', () => {
           '7-strings': '',
           '12-strings': '',
         },
+        discount: 0,
       });
   });
 
@@ -142,6 +147,7 @@ describe('Reducer: guitarsOtherData', () => {
         '7-strings': '',
         '12-strings': '',
       },
+      discount: 0,
     };
     expect(guitarsOtherData(state, changeFilterPrice(filterPrice)))
       .toEqual({
@@ -160,6 +166,7 @@ describe('Reducer: guitarsOtherData', () => {
           '7-strings': '',
           '12-strings': '',
         },
+        discount: 0,
       });
   });
 
@@ -183,6 +190,7 @@ describe('Reducer: guitarsOtherData', () => {
         '7-strings': '',
         '12-strings': '',
       },
+      discount: 0,
     };
     expect(guitarsOtherData(state, changeFilterType(filterType)))
       .toEqual({
@@ -200,6 +208,7 @@ describe('Reducer: guitarsOtherData', () => {
           '7-strings': '',
           '12-strings': '',
         },
+        discount: 0,
       });
   });
 
@@ -223,6 +232,7 @@ describe('Reducer: guitarsOtherData', () => {
         '7-strings': '',
         '12-strings': '',
       },
+      discount: 0,
     };
     expect(guitarsOtherData(state, changeFilterString(filterString)))
       .toEqual({
@@ -239,6 +249,7 @@ describe('Reducer: guitarsOtherData', () => {
           'ukulele': '',
         },
         filterString,
+        discount: 0,
       });
   });
 
@@ -262,6 +273,7 @@ describe('Reducer: guitarsOtherData', () => {
         '7-strings': '',
         '12-strings': '',
       },
+      discount: 0,
     };
     expect(guitarsOtherData(state, loadCurrentGuitarComments(currentGuitarComments)))
       .toEqual({
@@ -283,6 +295,7 @@ describe('Reducer: guitarsOtherData', () => {
           '7-strings': '',
           '12-strings': '',
         },
+        discount: 0,
       });
   });
 });

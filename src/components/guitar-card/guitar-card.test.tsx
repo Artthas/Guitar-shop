@@ -19,6 +19,7 @@ const page = makeFakePage();
 const filterPrice = makeFakeFilterPrice();
 const filterType = makeFakeFilterType();
 const filterString = makeFakeFilterString();
+const onBuyClick = jest.fn();
 
 const store = mockStore({
   GUITARS: {
@@ -44,6 +45,7 @@ describe('Component: GuitarCard', () => {
             guitar={currentGuitar}
             key={currentGuitar.id}
             guitarRating={guitarsRating[currentGuitar.id - 1]}
+            onBuyClick={onBuyClick}
           />);
         </Router>
       </Provider>);
@@ -51,7 +53,7 @@ describe('Component: GuitarCard', () => {
     expect(screen.getByText(/Купить/i)).toBeInTheDocument();
   });
 
-  it('when user click on component should redirect', () => {
+  it('when user click on img should redirect', () => {
     history.push('/fake');
     render(
       <Provider store={store}>
@@ -65,6 +67,7 @@ describe('Component: GuitarCard', () => {
                 guitar={currentGuitar}
                 key={currentGuitar.id}
                 guitarRating={guitarsRating[currentGuitar.id - 1]}
+                onBuyClick={onBuyClick}
               />);
             </Route>
           </Switch>
@@ -72,7 +75,33 @@ describe('Component: GuitarCard', () => {
       </Provider>,
     );
     expect(screen.queryByText('Mock Guitar Page')).not.toBeInTheDocument();
-    userEvent.click(screen.getByTestId('product-card'));
+    userEvent.click(screen.getByTestId('product-card-img'));
+    expect(screen.getByText('Mock Guitar Page')).toBeInTheDocument();
+  });
+
+  it('when user click on detailed should redirect', () => {
+    history.push('/fake');
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <Switch>
+            <Route exact path={AppRoute.GuitarPage}>
+              <h1>Mock Guitar Page</h1>
+            </Route>
+            <Route>
+              <GuitarCard
+                guitar={currentGuitar}
+                key={currentGuitar.id}
+                guitarRating={guitarsRating[currentGuitar.id - 1]}
+                onBuyClick={onBuyClick}
+              />);
+            </Route>
+          </Switch>
+        </Router>
+      </Provider>,
+    );
+    expect(screen.queryByText('Mock Guitar Page')).not.toBeInTheDocument();
+    userEvent.click(screen.getByTestId('product-card-detailed'));
     expect(screen.getByText('Mock Guitar Page')).toBeInTheDocument();
   });
 });

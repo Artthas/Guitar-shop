@@ -1,6 +1,6 @@
 import {GuitarsData} from '../../types/state';
 import {createReducer} from '@reduxjs/toolkit';
-import {loadGuitars, loadCurrentGuitar, loadGuitarsRating, changePage, changeIsDataLoaded} from '../action';
+import {loadGuitars, loadCurrentGuitar, loadGuitarsRating, changePage, changeIsDataLoaded, addGuitarInCart, subGuitarInCart, deleteGuitarInCart, changeNumberGuitarsInCart} from '../action';
 
 const initialState: GuitarsData = {
   guitars: [],
@@ -16,6 +16,7 @@ const initialState: GuitarsData = {
     'price': 0,
     'comments': [],
   },
+  guitarsInCart: [],
   guitarsRating: [],
   page: 1,
   isDataLoaded: false,
@@ -28,6 +29,25 @@ const guitarsData = createReducer(initialState, (builder) => {
     })
     .addCase(loadCurrentGuitar, (state, action) => {
       state.currentGuitar = action.payload;
+    })
+    .addCase(addGuitarInCart, (state, action) => {
+      const index = state.guitarsInCart.findIndex((guitar) => guitar.id === action.payload.id);
+      index !== -1 ? state.guitarsInCart.splice(index, 0, action.payload) : state.guitarsInCart.push(action.payload);
+    })
+    .addCase(subGuitarInCart, (state, action) => {
+      const index = state.guitarsInCart.findIndex((guitar) => action.payload.id === guitar.id);
+      state.guitarsInCart.splice(index, 1);
+    })
+    .addCase(deleteGuitarInCart, (state, action) => {
+      state.guitarsInCart = state.guitarsInCart.filter((guitar) => guitar.id !== action.payload.id);
+    })
+    .addCase(changeNumberGuitarsInCart, (state, action) => {
+      const indexInCart = state.guitarsInCart.findIndex((guitar) => guitar.id === action.payload.changingGuitar.id);
+      const deletedGuitarsInCart = state.guitarsInCart.filter((guitar) => guitar.id !== action.payload.changingGuitar.id);
+      for (let i = action.payload.changingNumber; i > 0; i--) {
+        deletedGuitarsInCart.splice(indexInCart, 0, action.payload.changingGuitar);
+      }
+      state.guitarsInCart = [...deletedGuitarsInCart];
     })
     .addCase(loadGuitarsRating, (state, action) => {
       state.guitarsRating = action.payload;

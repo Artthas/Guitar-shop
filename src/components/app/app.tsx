@@ -6,6 +6,7 @@ import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {useSelector} from 'react-redux';
 import {getIsDataLoaded} from '../../store/guitars-data/selectors';
+import Cart from '../cart/cart';
 
 function App(): JSX.Element {
   const isDataLoaded = useSelector(getIsDataLoaded);
@@ -22,6 +23,7 @@ function App(): JSX.Element {
         <Route exact path={AppRoute.Catalog} component={Main}/>
         <Route exact path={AppRoute.FilteredCatalog} component={Main}/>
         <Route exact path={AppRoute.GuitarPage} component={GuitarPage}/>
+        <Route exact path={AppRoute.Cart} component={Cart}/>
         <Route>
           <NotFoundScreen />
         </Route>

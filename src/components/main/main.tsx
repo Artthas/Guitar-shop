@@ -6,9 +6,12 @@ import {getGuitars, getPage} from '../../store/guitars-data/selectors';
 import {getGuitarsRating} from '../../store/guitars-data/selectors';
 import {getFilterPrice, getFilterString, getFilterType, getSortDirection, getSortTitle} from '../../store/guitars-other-data/selectors';
 import {ChangeEvent, FocusEvent, MouseEvent, useEffect, useState} from 'react';
-import {changeFilterPrice, changeFilterString, changeFilterType, changePage, changeSortDirection, changeSortTitle, loadGuitarsRating} from '../../store/action';
+import {addGuitarInCart, changeFilterPrice, changeFilterString, changeFilterType, changePage, changeSortDirection, changeSortTitle, loadGuitarsRating} from '../../store/action';
 import {Link, useHistory, useParams} from 'react-router-dom';
 import LoadingScreen from '../loading-screen/loading-screen';
+import ModalCart from '../modal-cart/modal-cart';
+import ModalSuccessCart from '../modal-success-cart/modal-success-cart';
+import {Guitar} from '../../types/guitar';
 
 type FiltersParams = {
   filters: string
@@ -91,6 +94,29 @@ function Main(): JSX.Element {
   const [isDisabledString7, setIsDisabledString7] = useState(false);
   const [isDisabledString12, setIsDisabledString12] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(true);
+  const [cartIsActive, setCartIsActive] = useState('');
+  const [cartSuccessIsActive, setCartSuccessIsActive] = useState('');
+  const [addingGuitar, setAddingGuitar] = useState({
+    'id': 0,
+    'name': '',
+    'vendorCode': '',
+    'type': '',
+    'description': '',
+    'previewImg': '',
+    'stringCount': 0,
+    'rating': 0,
+    'price': 0,
+    'comments': [{
+      'id': '',
+      'userName': '',
+      'advantage': '',
+      'disadvantage': '',
+      'comment': '',
+      'rating': 0,
+      'createAt': '',
+      'guitarId': 0,
+    }],
+  });
 
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
@@ -107,10 +133,12 @@ function Main(): JSX.Element {
 
   const sortDirectionHandler = (evt: MouseEvent<HTMLElement>) => {
     evt.preventDefault();
-    if (sortTitle === '') {
-      dispatch(changeSortTitle('по цене'));
+    if (evt.currentTarget.ariaLabel) {
+      if (sortTitle === '') {
+        dispatch(changeSortTitle('по цене'));
+      }
+      dispatch(changeSortDirection(evt.currentTarget.ariaLabel));
     }
-    dispatch(changeSortDirection(evt.currentTarget.ariaLabel));
   };
 
   const priceMinBlurHandler = (evt: FocusEvent<HTMLInputElement>) => {
@@ -292,6 +320,79 @@ function Main(): JSX.Element {
     setFilteredGuitars(tempFilteredGuitars);
   }, [filteredByTypeGuitars, filterString, dispatch]);
 
+  const onCloseCartEsc = (evt: KeyboardEvent) => {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      setCartIsActive('');
+      document.removeEventListener('keydown', onCloseCartEsc);
+      document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+    }
+  };
+
+  const onCloseSuccessCartEsc = (evt: KeyboardEvent) => {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      setCartSuccessIsActive('');
+      document.removeEventListener('keydown', onCloseSuccessCartEsc);
+      document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+    }
+  };
+
+  useEffect(() => {
+    if (cartSuccessIsActive === '') {
+      document.removeEventListener('keydown', onCloseSuccessCartEsc);
+    } else {
+      document.addEventListener('keydown', onCloseSuccessCartEsc);
+    }
+  });
+
+  useEffect(() => {
+    if (cartIsActive === '') {
+      document.removeEventListener('keydown', onCloseCartEsc);
+    } else {
+      document.addEventListener('keydown', onCloseCartEsc);
+    }
+  });
+
+  const onBuyClick = (addingGuitarItem: Guitar) => {
+    setCartIsActive(' is-active');
+    document.querySelector('body')?.setAttribute('style', 'overflow: hidden');
+    setAddingGuitar(addingGuitarItem);
+  };
+
+  const onCloseCartClick = () => {
+    setCartIsActive('');
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+  const onCloseSuccessCartClick = () => {
+    setCartSuccessIsActive('');
+    document.removeEventListener('keydown', onCloseSuccessCartEsc);
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+  const onAddToCartClick = () => {
+    dispatch(addGuitarInCart(addingGuitar));
+    setCartIsActive('');
+    setCartSuccessIsActive(' is-active');
+    document.removeEventListener('keydown', onCloseCartEsc);
+  };
+
+  const onCartOverlayClick = () => {
+    setCartIsActive('');
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
+  const onSuccessCartOverlayClick = () => {
+    setCartSuccessIsActive('');
+    document.removeEventListener('keydown', onCloseSuccessCartEsc);
+    document.removeEventListener('keydown', onCloseCartEsc);
+    document.querySelector('body')?.setAttribute('style', 'overflow: visible');
+  };
+
   return (
     <div className="wrapper">
 
@@ -444,7 +545,7 @@ function Main(): JSX.Element {
               </div>
             </div>
 
-            {isPageLoaded ? <GuitarList guitars={pagedGuitars} guitarsRating={guitarsRating}/> : <LoadingScreen />}
+            {isPageLoaded ? <GuitarList guitars={pagedGuitars} guitarsRating={guitarsRating} onBuyClick={onBuyClick}/> : <LoadingScreen />}
 
             <div className="pagination page-content__pagination">
               <ul className="pagination__list">
@@ -469,6 +570,10 @@ function Main(): JSX.Element {
       </main>
 
       <Footer />
+
+      {cartIsActive === ' is-active' ? <ModalCart isActive={cartIsActive} onCloseCartClick={onCloseCartClick} addingGuitar={addingGuitar} onAddToCartClick={onAddToCartClick} onCartOverlayClick={onCartOverlayClick} /> : ''}
+
+      {cartSuccessIsActive === ' is-active' ? <ModalSuccessCart isActive={cartSuccessIsActive} onCloseSuccessCartClick={onCloseSuccessCartClick} onSuccessCartOverlayClick={onSuccessCartOverlayClick} /> : ''}
 
     </div>
   );

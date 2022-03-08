@@ -1,10 +1,12 @@
 import {ChangeEvent, FocusEvent, useRef, useState, KeyboardEvent} from 'react';
 import {useSelector} from 'react-redux';
 import {Link, useHistory} from 'react-router-dom';
-import {getGuitars} from '../../store/guitars-data/selectors';
+import { AppRoute } from '../../const';
+import {getGuitars, getGuitarsInCart} from '../../store/guitars-data/selectors';
 
 function Header(): JSX.Element {
   const guitars = useSelector(getGuitars);
+  const guitarsInCart = useSelector(getGuitarsInCart);
 
   const [searchedGuitars, setSearchedGuitars] = useState(guitars);
 
@@ -84,15 +86,16 @@ function Header(): JSX.Element {
             <label className="visually-hidden" htmlFor="search">Поиск</label>
           </form>
           <ul className="form-search__select-list hidden" ref={searchListRef} data-testid="search-list">
-            {searchedGuitars.map((guitar) => <li className="form-search__select-item" data-testid="select-item" tabIndex={0} key={guitar.id} onKeyDown={onSearchedItemKeyDown(guitar.id)} onClick={() => {history.push(`/guitar/${guitar.id}`);}}>{guitar.name}</li>)}
+            {searchedGuitars ? searchedGuitars.map((guitar) => <li className="form-search__select-item" data-testid="select-item" tabIndex={0} key={guitar.id} onKeyDown={onSearchedItemKeyDown(guitar.id)} onClick={() => {history.push(`/guitar/${guitar.id}`);}}>{guitar.name}</li>) : ''}
           </ul>
         </div>
-        <a className="header__cart-link" href="/" onClick={(evt) => evt.preventDefault()} aria-label="Корзина">
+        <Link className="header__cart-link" to={AppRoute.Cart} aria-label="Корзина">
           <svg className="header__cart-icon" width="14" height="14" aria-hidden="true">
             <use xlinkHref="#icon-basket"></use>
           </svg>
-          <span className="visually-hidden">Перейти в корзину</span><span className="header__cart-count">2</span>
-        </a>
+          <span className="visually-hidden">Перейти в корзину</span>
+          {guitarsInCart && guitarsInCart.length !== 0 ? <span className="header__cart-count">{guitarsInCart.length}</span> : ''}
+        </Link>
       </div>
     </header>
   );
