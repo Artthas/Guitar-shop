@@ -1,6 +1,6 @@
 import {guitarsOtherData} from './guitars-other-data';
 import {makeFakeFilterPrice, makeFakeFilterString, makeFakeFilterType, makeFakeSortDirection, makeFakeSortTitle, makeFakeCurrentGuitarComment} from '../../utils/mocks';
-import {changeFilterPrice, changeFilterString, changeFilterType, changeSortDirection, changeSortTitle, loadCurrentGuitarComments} from '../action';
+import {changeFilterPrice, changeFilterString, changeFilterType, changeSortDirection, changeSortTitle, loadCurrentGuitarComments, loadDiscount} from '../action';
 
 const sortTitle = makeFakeSortTitle();
 const sortDirection = makeFakeSortDirection();
@@ -8,6 +8,7 @@ const filterPrice = makeFakeFilterPrice();
 const filterType = makeFakeFilterType();
 const filterString = makeFakeFilterString();
 const currentGuitarComments = [...new Array(20)].map(() => makeFakeCurrentGuitarComment(1));
+const discount = Math.floor(Math.random() * 60);
 
 describe('Reducer: guitarsOtherData', () => {
   it('without additional parameters should return initial state', () => {
@@ -296,6 +297,52 @@ describe('Reducer: guitarsOtherData', () => {
           '12-strings': '',
         },
         discount: 0,
+      });
+  });
+
+  it('should load discount by load discount', () => {
+    const state = {
+      currentGuitarComments: [],
+      sortTitle: '',
+      sortDirection: '',
+      filterPrice: {
+        'priceMin': '',
+        'priceMax': '',
+      },
+      filterType: {
+        'acoustic': '',
+        'electric': '',
+        'ukulele': '',
+      },
+      filterString: {
+        '4-strings': '',
+        '6-strings': '',
+        '7-strings': '',
+        '12-strings': '',
+      },
+      discount: 0,
+    };
+    expect(guitarsOtherData(state, loadDiscount(discount)))
+      .toEqual({
+        currentGuitarComments: [],
+        sortTitle: '',
+        sortDirection: '',
+        filterPrice: {
+          'priceMin': '',
+          'priceMax': '',
+        },
+        filterType: {
+          'acoustic': '',
+          'electric': '',
+          'ukulele': '',
+        },
+        filterString: {
+          '4-strings': '',
+          '6-strings': '',
+          '7-strings': '',
+          '12-strings': '',
+        },
+        discount: discount,
       });
   });
 });

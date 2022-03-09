@@ -1,6 +1,7 @@
 import {datatype, image, name,lorem} from 'faker';
-import {FilterPrice, FilterString, FilterType, Guitar} from '../types/guitar';
+import {Coupon, FilterPrice, FilterString, FilterType, Guitar} from '../types/guitar';
 import {Comment, CommentPost} from '../types/comment';
+import {COUPONS} from '../const';
 
 const sortTitles = [
   'по цене',
@@ -89,5 +90,11 @@ export const makeFakeFilterString = (): FilterString => (
     '6-strings': filterStrings['6-strings'][Math.floor(Math.random() * 1)],
     '7-strings': filterStrings['7-strings'][Math.floor(Math.random() * 1)],
     '12-strings': filterStrings['12-strings'][Math.floor(Math.random() * 1)],
+  }
+);
+
+export const makeFakeCoupon = (): Coupon => (
+  {
+    'coupon': COUPONS[Math.floor(Math.random() * 2)],
   }
 );

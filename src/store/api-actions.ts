@@ -55,8 +55,6 @@ export const postCouponAction = (coupon: Coupon, onSuccess: postCommentCbType, o
     try {
       const {data} = await api.post<number>(`${APIRoute.Coupons}`, coupon);
       dispatch(loadDiscount(data));
-      // eslint-disable-next-line no-console
-      console.log(data);
       onSuccess();
     } catch(error) {
       onError();

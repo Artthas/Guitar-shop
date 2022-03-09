@@ -38,3 +38,5 @@ export const GUITAR_TYPES_EN = {
   ukulele: 'ukulele',
   acoustic: 'acoustic',
 };
+
+export const COUPONS = ['light-333', 'medium-444', 'height-555'];

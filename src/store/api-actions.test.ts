@@ -5,8 +5,8 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {createAPI} from '../services/api';
 import {APIRoute} from '../const';
 import {State} from '../types/state';
-import {makeFakeCurrentGuitarComment, makeFakeCurrentGuitarCommentPost, makeFakeGuitar} from '../utils/mocks';
-import {fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction, fetchGuitarsAction, postCurrentGuitarCommentAction} from './api-actions';
+import {makeFakeCoupon, makeFakeCurrentGuitarComment, makeFakeCurrentGuitarCommentPost, makeFakeGuitar} from '../utils/mocks';
+import {fetchCurrentGuitarAction, fetchCurrentGuitarCommentsAction, fetchGuitarsAction, postCouponAction, postCurrentGuitarCommentAction} from './api-actions';
 import {changeIsDataLoaded, loadCurrentGuitar, loadCurrentGuitarComments, loadGuitars} from './action';
 
 describe('Async actions', () => {
@@ -88,5 +88,19 @@ describe('Async actions', () => {
     expect(store.getActions()).toEqual([
       loadCurrentGuitarComments(currentGuitarComments),
     ]);
+  });
+
+  it('should dispatch Post_Coupon when POST /coupons', async () => {
+    const coupon = makeFakeCoupon();
+    const onError = jest.fn();
+    const onSuccess = jest.fn();
+    mockAPI
+      .onPost(`/${APIRoute.Coupons}`)
+      .reply(200, []);
+
+    const store = mockStore();
+    await store.dispatch(postCouponAction(coupon, onSuccess, onError));
+
+    expect(store.getActions()).toEqual([]);
   });
 });
